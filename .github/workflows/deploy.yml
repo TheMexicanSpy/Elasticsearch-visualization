@@ -1,0 +1,44 @@
+name: Deploy Elasticsearch Visualizations
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'  # Ejecutar diariamente
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Load data to Elasticsearch
+      env:
+        ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
+        ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWORD }}
+      run: |
+        python scripts/load_to_elasticsearch.py
+    
+    - name: Generate visualizations
+      env:
+        ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
+        ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWORD }}
+      run: |
+        python scripts/generate_visualizations.py
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
