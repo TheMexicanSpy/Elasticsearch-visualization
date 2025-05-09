@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualizaciones de Elasticsearch</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        img { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Visualizaciones del Dataset Titanic</h1>
+        <p>Estas visualizaciones se generaron automáticamente desde Elasticsearch</p>
+        
+        <h2>Supervivencia por Clase y Distribución de Edades</h2>
+        <img src="visualizations.png" alt="Visualizaciones generadas">
+        
+        <p>Última actualización: <span id="update-date"></span></p>
+    </div>
+    
+    <script>
+        document.getElementById('update-date').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
