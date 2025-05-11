@@ -1,54 +1,26 @@
-import pandas as pd
-import sys  
+# scripts/load_to_elasticsearch.py (ejemplo básico)
 from elasticsearch import Elasticsearch
-from elasticsearch.helpers import bulk
+import pandas as pd
 import os
 
-def load_data_to_elasticsearch():
-    try:
-        # Obtener variables de entorno CON verificación
-        cloud_id = os.environ.get('ELASTIC_ID')
-        password = os.environ.get('ELASTIC_PASSWD')
-        
-        if not cloud_id or not password:
-            error_msg = "❌ Error: Variables de entorno faltantes\n"
-            error_msg += f"Cloud ID presente: {'Sí' if cloud_id else 'No'}\n"
-            error_msg += f"Password presente: {'Sí' if password else 'No'}"
-            raise ValueError(error_msg)
-        
-        print("Iniciando conexión a Elasticsearch...")
-        print(f"Cloud ID (primeros 10 chars): {cloud_id[:10]}...")  # Solo primeros caracteres por seguridad
-        
-        es = Elasticsearch(
-            cloud_id=cloud_id,
-            http_auth=("briceno", password),
-        )
-        
-        if not es.ping():
-            raise ConnectionError("No se pudo conectar a Elasticsearch")
-            
-        print("✅ Conexión exitosa!")
-        return es
-        
-    except Exception as e:
-        print(f"🚨 Error crítico: {str(e)}", file=sys.stderr)
-        sys.exit(1)
-        
-    # Leer el dataset
-    df = pd.read_csv('data/Titanic-Dataset.csv')
+def load_data():
+    cloud_id = os.environ.get('ELASTIC_ID')
+    password = os.environ.get('ELASTIC_PASSWD')
     
-    # Preparar los datos para bulk insert
-    actions = [
-        {
-            "_index": "titanic",
-            "_source": row.to_dict()
-        }
-        for _, row in df.iterrows()
-    ]
+    es = Elasticsearch(
+        cloud_id=cloud_id,
+        basic_auth=("briceno", password)
+    )
+
+    # Cargar datos del Titanic (ejemplo con un CSV)
+    df = pd.read_csv("data/Titanic-Dataset.csv")  # Asegúrate de que este archivo existe
     
-    # Insertar datos en Elasticsearch
-    success, _ = bulk(es, actions)
-    print(f"Successfully loaded {success} documents to Elasticsearch")
+    # Convertir a formato JSON e indexar en Elasticsearch
+    records = df.to_dict(orient='records')
+    for i, record in enumerate(records):
+        es.index(index="titanic", id=i+1, document=record)
+
+    print(f"Datos cargados: {len(records)} registros en índice 'titanic'")
 
 if __name__ == "__main__":
-    load_data_to_elasticsearch()
+    load_data()
