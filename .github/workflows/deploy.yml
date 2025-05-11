@@ -29,9 +29,21 @@ jobs:
         ELASTIC_ID: ${{ secrets.ELASTIC_ID }}
         ELASTIC_PASSWD: ${{ secrets.ELASTIC_PASSWD }}
       run: |
-        echo "Verificando variables de entorno..."
-        echo "Cloud ID length: ${#ELASTIC_CLOUD_ID}"  # No muestra el valor real
-        echo "Password length: ${#ELASTIC_PASSWORD}"  # No muestra el valor real
+        echo "=== Debug: Variables de entorno ==="
+        echo "Cloud ID length: ${#ELASTIC_CLOUD_ID}"
+        echo "Password length: ${#ELASTIC_PASSWORD}"
+    
+        # Verifica que las variables existen
+        if [ -z "$ELASTIC_CLOUD_ID" ]; then
+          echo "::error::ELASTIC_CLOUD_ID está vacío"
+          exit 1
+        fi
+    
+        if [ -z "$ELASTIC_PASSWORD" ]; then
+          echo "::error::ELASTIC_PASSWORD está vacío"
+          exit 1
+        fi
+    
         python scripts/load_to_elasticsearch.py
     
     - name: Generate visualizations
