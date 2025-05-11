@@ -4,18 +4,23 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '0 0 * * *'  # Ejecutar diariamente
+    - cron: '0 0 * * *'  # Run daily
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3  # Updated to v3
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4  # Updated to v4
       with:
         python-version: '3.9'
     
@@ -29,18 +34,17 @@ jobs:
         ELASTIC_ID: ${{ secrets.ELASTIC_ID }}
         ELASTIC_PASSWD: ${{ secrets.ELASTIC_PASSWD }}
       run: |
-        echo "=== Debug: Variables de entorno ==="
+        echo "=== Debug: Environment Variables ==="
         echo "Cloud ID length: ${#ELASTIC_ID}"
         echo "Password length: ${#ELASTIC_PASSWD}"
-    
-        # Verifica que las variables existen
+        
         if [ -z "$ELASTIC_ID" ]; then
-          echo "::error::ELASTIC_ID está vacío"
+          echo "::error::ELASTIC_ID is empty"
           exit 1
         fi
     
         if [ -z "$ELASTIC_PASSWD" ]; then
-          echo "::error::ELASTIC_PASSWD está vacío"
+          echo "::error::ELASTIC_PASSWD is empty"
           exit 1
         fi
     
@@ -52,9 +56,16 @@ jobs:
         ELASTIC_PASSWD: ${{ secrets.ELASTIC_PASSWD }}
       run: |
         python scripts/visualize.py
+        
+        # Verify the docs directory was created
+        if [ ! -d "docs" ]; then
+          echo "::error::docs directory was not created"
+          exit 1
+        fi
     
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./docs
+        keep_files: false  # Clean the gh-pages branch before deploy
