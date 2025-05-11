@@ -30,17 +30,17 @@ jobs:
         ELASTIC_PASSWD: ${{ secrets.ELASTIC_PASSWD }}
       run: |
         echo "=== Debug: Variables de entorno ==="
-        echo "Cloud ID length: ${#ELASTIC_CLOUD_ID}"
-        echo "Password length: ${#ELASTIC_PASSWORD}"
+        echo "Cloud ID length: ${#ELASTIC_ID}"
+        echo "Password length: ${#ELASTIC_PASSWD}"
     
         # Verifica que las variables existen
-        if [ -z "$ELASTIC_CLOUD_ID" ]; then
-          echo "::error::ELASTIC_CLOUD_ID está vacío"
+        if [ -z "$ELASTIC_ID" ]; then
+          echo "::error::ELASTIC_ID está vacío"
           exit 1
         fi
     
-        if [ -z "$ELASTIC_PASSWORD" ]; then
-          echo "::error::ELASTIC_PASSWORD está vacío"
+        if [ -z "$ELASTIC_PASSWD" ]; then
+          echo "::error::ELASTIC_PASSWD está vacío"
           exit 1
         fi
     
@@ -48,8 +48,8 @@ jobs:
     
     - name: Generate visualizations
       env:
-        ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_ID }}
-        ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWD }}
+        ELASTIC_ID: ${{ secrets.ELASTIC_ID }}
+        ELASTIC_PASSWD: ${{ secrets.ELASTIC_PASSWD }}
       run: |
         python scripts/visualize.py
     
