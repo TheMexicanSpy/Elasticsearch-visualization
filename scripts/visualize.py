@@ -35,23 +35,36 @@ def generate_visualizations():
         print("Datos limpios:")
         print(df.dtypes)  # Verifica los tipos de datos
         
-        # Crear visualizaciones
-        plt.figure(figsize=(12, 6))
+        # Configuración mejorada para las gráficas
+        plt.figure(figsize=(14, 6))  # Aumenta el ancho total
+        plt.subplots_adjust(wspace=0.4, hspace=0.6)  # Ajusta espacios horizontales y verticales
         
-        # Gráfico 1: Supervivencia por clase
-        plt.subplot(1, 2, 1)
-        df.groupby(['Pclass', 'Survived']).size().unstack().plot(kind='bar', stacked=True)
-        plt.title('Supervivencia por Clase')
+        # Gráfico 1: Supervivencia por clase (izquierda)
+        plt.subplot(1, 2, 1)  # 1 fila, 2 columnas, posición 1
+        df.groupby(['Pclass', 'Survived']).size().unstack().plot(
+            kind='bar',
+            stacked=True,
+            color=['#ff9999','#66b3ff']  # Colores personalizados
+        )
+        plt.title('Supervivencia por Clase', pad=20)  # pad añade espacio al título
+        plt.xlabel('Clase')
+        plt.ylabel('Cantidad')
+        plt.legend(['No Sobrevivió', 'Sobrevivió'], bbox_to_anchor=(1.05, 1))  # Leyenda fuera del gráfico
         
-        # Gráfico 2: Distribución de edades
-        plt.subplot(1, 2, 2)
-        df['Age'].hist(bins=20)
-        plt.title('Distribución de Edades')
+        # Gráfico 2: Distribución de edades (derecha)
+        plt.subplot(1, 2, 2)  # 1 fila, 2 columnas, posición 2
+        df['Age'].hist(bins=20, color='#99ff99', edgecolor='black')
+        plt.title('Distribución de Edades', pad=20)
+        plt.xlabel('Edad')
+        plt.ylabel('Frecuencia')
+
+        # Ajustes finales
+        plt.tight_layout(pad=3.0)  # Añade padding general
         
         # Guardar gráficos
         output_dir = os.path.join(os.getcwd(), 'docs')
         os.makedirs(output_dir, exist_ok=True)
-        plt.savefig(os.path.join(output_dir, 'visualizations.png'), dpi=100, bbox_inches='tight')
+        plt.savefig(os.path.join(output_dir, 'visualizations.png'), dpi=120, bbox_inches='tight')
         print(f"✅ Imagen guardada en: {os.path.abspath(os.path.join(output_dir, 'visualizations.png'))}")
         
     except Exception as e:
