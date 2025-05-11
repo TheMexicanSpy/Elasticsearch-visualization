@@ -17,10 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3  # Updated to v3
+    - uses: actions/checkout@v3
     
     - name: Set up Python
-      uses: actions/setup-python@v4  # Updated to v4
+      uses: actions/setup-python@v4
       with:
         python-version: '3.9'
     
@@ -57,9 +57,17 @@ jobs:
       run: |
         python scripts/visualize.py
         
-        # Verify the docs directory was created
-        if [ ! -d "docs" ]; then
-          echo "::error::docs directory was not created"
+        # Verificación exhaustiva de los archivos generados
+        echo "=== Contenido de docs/ ==="
+        ls -la docs/
+        
+        if [ ! -f "docs/visualizations.png" ]; then
+          echo "::error::El archivo visualizations.png no fue creado"
+          exit 1
+        fi
+        
+        if [ ! -f "docs/index.html" ]; then
+          echo "::error::El archivo index.html no fue creado"
           exit 1
         fi
     
@@ -68,4 +76,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./docs
-        keep_files: false  # Clean the gh-pages branch before deploy
+        keep_files: false
+        force_orphan: true  # Fuerza un nuevo historial
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
