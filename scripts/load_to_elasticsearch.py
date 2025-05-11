@@ -4,6 +4,7 @@ from elasticsearch.helpers import bulk
 import os
 
 def load_data_to_elasticsearch():
+    try:
          # Obtener credenciales de variables de entorno
         cloud_id = os.getenv('ELASTIC_ID')
         password = os.getenv('ELASTIC_PASSWD')
