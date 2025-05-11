@@ -35,7 +35,7 @@ def load_data_to_elasticsearch():
         sys.exit(1)
         
     # Leer el dataset
-    df = pd.read_csv('data/sample_dataset.csv')
+    df = pd.read_csv('data/Titanic-Dataset.csv')
     
     # Preparar los datos para bulk insert
     actions = [
