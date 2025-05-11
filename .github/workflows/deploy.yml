@@ -26,9 +26,12 @@ jobs:
     
     - name: Load data to Elasticsearch
       env:
-        ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_ID }}
-        ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWD }}
+        ELASTIC_ID: ${{ secrets.ELASTIC_ID }}
+        ELASTIC_PASSWD: ${{ secrets.ELASTIC_PASSWD }}
       run: |
+        echo "Verificando variables de entorno..."
+        echo "Cloud ID length: ${#ELASTIC_CLOUD_ID}"  # No muestra el valor real
+        echo "Password length: ${#ELASTIC_PASSWORD}"  # No muestra el valor real
         python scripts/load_to_elasticsearch.py
     
     - name: Generate visualizations
