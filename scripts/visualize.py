@@ -1,6 +1,7 @@
 import pandas as pd
 import sys
 import matplotlib.pyplot as plt
+import os
 from elasticsearch import Elasticsearch
 
 def generate_visualizations():
