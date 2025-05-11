@@ -4,12 +4,27 @@ from elasticsearch.helpers import bulk
 import os
 
 def load_data_to_elasticsearch():
-    # Configuración de Elasticsearch
-    es = Elasticsearch(
-        cloud_id="github_actions:ea01be305c7a4e50871237b16bde813b:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDJiZjliNjZkYWI2YjRlYTY5MWFiMmY1ODMzOGZmNGRjJDQ5NTE2ZTE0NGFhZTQzZjVhZTc5Y2NmMzlkZjg3Y2Iy",  # Reemplazar con tu cloud ID
-        http_auth=("briceno", "Luigi123@")  # Reemplazar con tus credenciales
-    )
-    
+         # Obtener credenciales de variables de entorno
+        cloud_id = os.getenv('ELASTIC_ID')
+        password = os.getenv('ELASTIC_PASSWD')
+        
+        print(f"Intentando conectar con Cloud ID: {cloud_id[:30]}...")  # Log parcial para debug
+        
+        es = Elasticsearch(
+            cloud_id=cloud_id,
+            http_auth=("briceno", password)
+        )
+        
+        # Verificar conexión
+        if es.ping():
+            print("✅ Conexión exitosa a Elasticsearch!")
+        else:
+            print("❌ No se pudo conectar a Elasticsearch")
+            
+    except Exception as e:
+        print(f"🚨 Error de conexión: {str(e)}")
+        raise
+
     # Leer el dataset
     df = pd.read_csv('data/sample_dataset.csv')
     
