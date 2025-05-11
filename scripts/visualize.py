@@ -5,9 +5,11 @@ from elasticsearch import Elasticsearch
 
 def generate_visualizations():
     # Conexión a Elasticsearch
+    cloud_id = os.environ.get('ELASTIC_ID')
+    password = os.environ.get('ELASTIC_PASSWD')
     es = Elasticsearch(
-        cloud_id="ea01be305c7a4e50871237b16bde813b:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDJiZjliNjZkYWI2YjRlYTY5MWFiMmY1ODMzOGZmNGRjJDQ5NTE2ZTE0NGFhZTQzZjVhZTc5Y2NmMzlkZjg3Y2Iy",  # Reemplazar con tu cloud ID
-        http_auth=("briceno", "Luigi123@")  # Reemplazar con tus credenciales
+        cloud_id= os.environ.get('ELASTIC_ID')
+        http_auth=("briceno", os.environ.get('ELASTIC_PASSWD'))  
     )
     
     # Consulta para obtener datos
