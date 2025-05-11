@@ -25,15 +25,15 @@ jobs:
     
     - name: Load data to Elasticsearch
       env:
-        ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
-        ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWORD }}
+        ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_ID }}
+        ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWD }}
       run: |
         python scripts/load_to_elasticsearch.py
     
     - name: Generate visualizations
       env:
-        ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
-        ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWORD }}
+        ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_ID }}
+        ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWD }}
       run: |
         python scripts/generate_visualizations.py
     
