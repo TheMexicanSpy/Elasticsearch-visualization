@@ -5,27 +5,35 @@ import os
 
 def load_data_to_elasticsearch():
     try:
-         # Obtener credenciales de variables de entorno
-        cloud_id = os.getenv('ELASTIC_ID')
-        password = os.getenv('ELASTIC_PASSWD')
+        # Obtener variables de entorno CON verificación
+        cloud_id = os.environ.get('ELASTIC_ID')
+        password = os.environ.get('ELASTIC_PASSWD')
         
-        print(f"Intentando conectar con Cloud ID: {cloud_id[:30]}...")  # Log parcial para debug
+        # Verificación explícita
+        if not cloud_id:
+            raise ValueError("ELASTIC_ID no está definido")
+        if not password:
+            raise ValueError("ELASTIC_PASSWD no está definido")
+        
+        print("Iniciando conexión a Elasticsearch...")
+        print(f"Cloud ID (primeros 10 chars): {cloud_id[:10]}...")  # Solo primeros caracteres por seguridad
         
         es = Elasticsearch(
             cloud_id=cloud_id,
-            http_auth=("briceno", password)
+            http_auth=("briceno", password),
+            timeout=30
         )
         
-        # Verificar conexión
-        if es.ping():
-            print("✅ Conexión exitosa a Elasticsearch!")
-        else:
-            print("❌ No se pudo conectar a Elasticsearch")
+        if not es.ping():
+            raise ConnectionError("No se pudo conectar a Elasticsearch")
             
+        print("✅ Conexión exitosa!")
+        return es
+        
     except Exception as e:
-        print(f"🚨 Error de conexión: {str(e)}")
-        raise
-
+        print(f"🚨 Error crítico: {str(e)}", file=sys.stderr)
+        sys.exit(1)
+        
     # Leer el dataset
     df = pd.read_csv('data/sample_dataset.csv')
     
