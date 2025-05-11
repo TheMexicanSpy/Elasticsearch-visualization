@@ -35,7 +35,7 @@ jobs:
         ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_ID }}
         ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWD }}
       run: |
-        python scripts/visualizations.py
+        python scripts/visualize.py
     
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
