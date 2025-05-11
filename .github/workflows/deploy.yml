@@ -76,7 +76,6 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./docs
+        publish_branch: main  # ¡Nuevo! Forzar despliegue en main
         keep_files: false
-        force_orphan: true  # Fuerza un nuevo historial
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
+        force_orphan: true
