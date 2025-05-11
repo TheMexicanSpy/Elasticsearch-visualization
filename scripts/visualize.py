@@ -49,10 +49,10 @@ def generate_visualizations():
         plt.title('Distribución de Edades')
         
         # Guardar gráficos
-        plt.tight_layout()
-        os.makedirs('docs', exist_ok=True)
-        plt.savefig('docs/visualizations.png')
-        print("✅ Visualizaciones generadas y guardadas")
+        output_dir = os.path.join(os.getcwd(), 'docs')
+        os.makedirs(output_dir, exist_ok=True)
+        plt.savefig(os.path.join(output_dir, 'visualizations.png'), dpi=100, bbox_inches='tight')
+        print(f"✅ Imagen guardada en: {os.path.abspath(os.path.join(output_dir, 'visualizations.png'))}")
         
     except Exception as e:
         print(f"❌ Error: {str(e)}")
