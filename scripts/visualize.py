@@ -8,7 +8,7 @@ def generate_visualizations():
     password = os.environ.get('ELASTIC_PASSWD')
     
     es = Elasticsearch(
-        cloud_id= cloud_id
+        cloud_id= cloud_id,
         http_auth=("briceno", password),
     )
     
