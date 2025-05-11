@@ -4,9 +4,6 @@ import matplotlib.pyplot as plt
 from elasticsearch import Elasticsearch
 
 def generate_visualizations():
-    # Conexión a Elasticsearch
-    cloud_id = os.environ.get('ELASTIC_ID')
-    password = os.environ.get('ELASTIC_PASSWD')
     es = Elasticsearch(
         cloud_id= os.environ.get('ELASTIC_ID')
         http_auth=("briceno", os.environ.get('ELASTIC_PASSWD'))  
